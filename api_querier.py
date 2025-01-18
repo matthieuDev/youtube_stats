@@ -1,6 +1,8 @@
 import googleapiclient.discovery
+import os, json
 
 from secret_keys import API_KEY
+from path_folder import dump_folder
 
 class youtube_querier_class:
     def __init__(self, apikey=API_KEY):
@@ -32,7 +34,12 @@ class youtube_querier_class:
         )
         return request.execute()
 
-    def get_info_all_videos_of_channel(self, channel_name) :
+    def get_info_all_videos_of_channel(self, channel_name, dump_folder=dump_folder) :
+        save_path = f'{dump_folder}{channel_name}'
+        if os.path.exists(save_path):
+            with open(save_path, encoding='utf8') as f :
+                return json.load(f)
+            
         channel_info_res = self.get_id_channel(channel_name).get('items', [])
         assert(len(channel_info_res)) == 1
         id_channel = channel_info_res[0].get('id')
@@ -51,5 +58,8 @@ class youtube_querier_class:
         list_video_id = [info['id']['videoId'] for info in video_list if info['id'].get('kind') == 'youtube#video']
         for i in range(0, len(list_video_id), 50):
             info_video.extend(self.get_video_statistic(list_video_id[i:i+50])['items'])
+
+        with open(save_path, 'w', encoding='utf8') as f :
+            json.dump(info_video, f)
 
         return info_video
