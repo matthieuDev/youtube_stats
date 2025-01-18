@@ -31,3 +31,25 @@ class youtube_querier_class:
             id=','.join(video_id_list)
         )
         return request.execute()
+
+    def get_info_all_videos_of_channel(self, channel_name) :
+        channel_info_res = self.get_id_channel(channel_name).get('items', [])
+        assert(len(channel_info_res)) == 1
+        id_channel = channel_info_res[0].get('id')
+        assert id_channel
+
+        nextPageToken = None
+        video_list = []
+        for i in range(100) :
+            video_list_it = self.get_video_list_from_channel_id(id_channel, nextPageToken)
+            video_list.extend(video_list_it.get('items', []))
+            nextPageToken = video_list_it.get('nextPageToken')
+            if not nextPageToken :
+                break
+                
+        info_video = []
+        list_video_id = [info['id']['videoId'] for info in video_list if info['id'].get('kind') == 'youtube#video']
+        for i in range(0, len(list_video_id), 50):
+            info_video.extend(self.get_video_statistic(list_video_id[i:i+50])['items'])
+
+        return info_video
