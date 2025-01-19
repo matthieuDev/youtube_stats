@@ -35,7 +35,7 @@ class youtube_querier_class:
         return request.execute()
 
     def get_info_all_videos_of_channel(self, channel_name, dump_folder=dump_folder) :
-        save_path = f'{dump_folder}{channel_name}'
+        save_path = f'{dump_folder}{channel_name}.json'
         if os.path.exists(save_path):
             with open(save_path, encoding='utf8') as f :
                 return json.load(f)
