@@ -1,7 +1,7 @@
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-def create_view_graph(info_videos, save_path):
+def create_view_graph(info_videos, save_path, channel_name):
     x, y = [] , []
 
     for info in info_videos :
@@ -12,9 +12,10 @@ def create_view_graph(info_videos, save_path):
         
         y.append(int(info['statistics']['viewCount']))
 
-    plt.scatter(x,y)
+    plt.scatter(x,y, s=5)
     plt.yscale('log')
 
+    plt.title(f'Evolution des vues de {channel_name} en fonction de leurs dates de sorties')
     plt.xlabel('Année')
     plt.ylabel('Vues')
     plt.grid(True)

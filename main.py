@@ -9,4 +9,4 @@ if __name__ == '__main__' :
     channel_name = sys.argv[1]
     youtube_querier = youtube_querier_class()
     info_videos = youtube_querier.get_info_all_videos_of_channel(channel_name)
-    create_view_graph(info_videos, f'{graph_folder}{channel_name}')
+    create_view_graph(info_videos, f'{graph_folder}{channel_name}', channel_name)
